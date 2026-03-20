@@ -1030,6 +1030,12 @@ function showPage(name) {
 // ════════════════════════════════════════
 function loadHoldings() {
   holdings = JSON.parse(localStorage.getItem('pf_holdings') || '[]');
+  // 既存データにセクターが未設定の場合は自動補完
+  let updated = false;
+  holdings.forEach(h => {
+    if (!h.sector) { h.sector = guessSector(h.code, h.name); updated = true; }
+  });
+  if (updated) saveHoldings();
 }
 
 function saveHoldings() {
