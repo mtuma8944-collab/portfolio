@@ -43,98 +43,88 @@
     }
 
     /* ══════════════════════════════
-       LOGIN
+       LOGIN — UNBOX REVEAL
     ══════════════════════════════ */
     #login-screen {
       position: fixed; inset: 0;
       display: flex; align-items: center; justify-content: center;
+      flex-direction: column;
       z-index: 1000;
-      background:
-        radial-gradient(ellipse at 15% 115%, rgba(40,167,69,0.10) 0%, transparent 48%),
-        radial-gradient(ellipse at 85%  -5%, rgba(0,102,204,0.09) 0%, transparent 48%),
-        #F5F5F7;
+      background: #F8F8FA;
     }
 
-    /* ── Phase 1: "Mt" テキスト ── */
-    #splash-text {
-      position: absolute;
-      font-size: 86px;
-      font-weight: 700;
-      letter-spacing: -4px;
-      color: var(--text);
-      opacity: 0;
-      filter: blur(16px);
-      transform: scale(0.88);
-      pointer-events: none;
-      text-shadow:
-        0 2px 12px rgba(0,0,0,0.10),
-        0 8px 40px rgba(0,0,0,0.06),
-        0 1px 2px rgba(0,0,0,0.08);
-    }
-
-    #splash-text.show { animation: splashIn 0.7s cubic-bezier(0.16,1,0.3,1) forwards; }
-    #splash-text.hide { animation: splashOut 0.45s cubic-bezier(0.4,0,0.6,1) forwards; }
-
-    @keyframes splashIn {
-      from { opacity: 0; filter: blur(16px); transform: scale(0.88); }
-      to   { opacity: 1; filter: blur(0);    transform: scale(1); }
-    }
-    @keyframes splashOut {
-      from { opacity: 1; filter: blur(0);    transform: scale(1); }
-      to   { opacity: 0; filter: blur(10px); transform: scale(1.06); }
-    }
-
-    /* ── Phase 2: カード ── */
-    .login-card {
-      width: 380px;
-      background: rgba(255,255,255,0.88);
-      backdrop-filter: blur(48px) saturate(200%);
-      -webkit-backdrop-filter: blur(48px) saturate(200%);
-      border: 1px solid rgba(255,255,255,0.95);
-      border-radius: 28px;
-      padding: 52px 40px 46px;
+    #splash-content {
       display: flex; flex-direction: column; align-items: center;
-      box-shadow:
-        0 0 0 1px rgba(0,0,0,0.03),
-        0 4px 16px rgba(0,0,0,0.05),
-        0 24px 64px rgba(0,0,0,0.10);
-      opacity: 0;
-      filter: blur(12px) saturate(0);
-      transform: scale(0.95) translateY(12px);
+      gap: 0;
     }
 
-    .login-card.mounted { animation: mtMountIn 0.75s cubic-bezier(0.16,1,0.3,1) forwards; }
-
-    @keyframes mtMountIn {
-      0%   { opacity: 0;   filter: blur(12px) saturate(0);    transform: scale(0.95) translateY(12px); }
-      50%  { opacity: 0.8; filter: blur(4px)  saturate(60%);  transform: scale(0.99) translateY(2px); }
-      100% { opacity: 1;   filter: blur(0)    saturate(100%); transform: scale(1)    translateY(0); }
+    /* 細い横線 — 中央から左右に伸びる */
+    #splash-line {
+      width: 0;
+      height: 1px;
+      background: rgba(0,0,0,0.18);
+      margin-bottom: 0;
+    }
+    #splash-line.expand {
+      animation: lineExpand 0.7s cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+    @keyframes lineExpand {
+      from { width: 0; }
+      to   { width: 56px; }
     }
 
-    .login-card > * { opacity: 0; transform: translateY(10px); filter: blur(4px); }
-    .login-card.mounted > *:nth-child(1) { animation: mtChild 0.5s 0.20s cubic-bezier(0.16,1,0.3,1) forwards; }
-    .login-card.mounted > *:nth-child(2) { animation: mtChild 0.5s 0.28s cubic-bezier(0.16,1,0.3,1) forwards; }
-    .login-card.mounted > *:nth-child(3) { animation: mtChild 0.5s 0.34s cubic-bezier(0.16,1,0.3,1) forwards; }
-
-    @keyframes mtChild {
-      from { opacity: 0; transform: translateY(10px); filter: blur(4px); }
-      to   { opacity: 1; transform: translateY(0);    filter: blur(0); }
+    /* "Mt" テキスト — 線の下からクリップリビール */
+    #splash-text-wrap {
+      overflow: hidden;
+      padding-bottom: 4px;
     }
-
-    .login-title {
-      font-size: 30px; font-weight: 700; letter-spacing: -0.6px;
+    #splash-text {
+      font-size: 92px;
+      font-weight: 700;
+      letter-spacing: -5px;
       color: var(--text);
-      text-shadow: 0 1px 8px rgba(0,0,0,0.07);
+      line-height: 1;
+      transform: translateY(100%);
+      display: block;
+      text-shadow:
+        0 2px 16px rgba(0,0,0,0.09),
+        0 1px 2px rgba(0,0,0,0.06);
+    }
+    #splash-text.reveal {
+      animation: textReveal 0.85s cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+    @keyframes textReveal {
+      from { transform: translateY(100%); }
+      to   { transform: translateY(0); }
     }
 
-    @keyframes shake {
-      0%,100% { transform: translateX(0); }
-      20% { transform: translateX(-8px); }
-      40% { transform: translateX(6px); }
-      60% { transform: translateX(-4px); }
-      80% { transform: translateX(2px); }
+    /* "Portfolio" サブテキスト */
+    #splash-sub {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      color: rgba(0,0,0,0.28);
+      text-transform: uppercase;
+      opacity: 0;
+      margin-top: 14px;
+      transform: translateY(6px);
     }
-    .login-card.shake { animation: shake 0.38s ease; }
+    #splash-sub.show {
+      animation: subReveal 0.6s cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+    @keyframes subReveal {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 退場 */
+    #login-screen.exit {
+      animation: screenExit 0.55s cubic-bezier(0.4,0,1,1) forwards;
+    }
+    @keyframes screenExit {
+      from { opacity: 1; }
+      to   { opacity: 0; }
+    }
 
     /* ══════════════════════════════
        APP SHELL
@@ -644,11 +634,10 @@
 
 <!-- ═══════════ LOGIN ═══════════ -->
 <div id="login-screen">
-  <div id="splash-text">Mt</div>
-  <div class="login-card" id="login-card">
-    
-    <div class="login-title">Mt</div>
-    
+  <div id="splash-content">
+    <div id="splash-line"></div>
+    <div id="splash-text-wrap"><div id="splash-text">Mt</div></div>
+    <div id="splash-sub">Portfolio</div>
   </div>
 </div>
 
@@ -953,31 +942,18 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('today-date').textContent =
     now.toLocaleDateString('ja-JP', { year:'numeric', month:'long', day:'numeric', weekday:'long' });
 
-  // Phase 1: 大きな "Mt" テキストを表示
-  const splash = document.getElementById('splash-text');
-  const card   = document.getElementById('login-card');
-  setTimeout(() => splash.classList.add('show'), 80);
-
-  // Phase 2: テキストをフェードアウトしてカードをマウント
+  // UNBOX REVEAL アニメーション
+  const el = id => document.getElementById(id);
+  setTimeout(() => el('splash-line').classList.add('expand'), 100);
+  setTimeout(() => el('splash-text').classList.add('reveal'), 400);
+  setTimeout(() => el('splash-sub').classList.add('show'), 900);
   setTimeout(() => {
-    splash.classList.add('hide');
-    card.classList.add('mounted');
-  }, 1000);
-
-  // Phase 3: カードをフェードアウトしてアプリへ遷移
-  setTimeout(() => {
-    card.style.transition = 'filter 0.42s ease, opacity 0.42s ease, transform 0.42s ease';
-    card.style.filter    = 'blur(14px) saturate(0)';
-    card.style.opacity   = '0';
-    card.style.transform = 'scale(1.04)';
-    const overlay = document.getElementById('login-overlay');
-    setTimeout(() => overlay.classList.add('in'), 200);
+    el('login-screen').classList.add('exit');
     setTimeout(() => {
-      document.getElementById('login-screen').style.display = 'none';
-      overlay.classList.remove('in');
+      el('login-screen').style.display = 'none';
       bootApp(true);
-    }, 640);
-  }, 2600);
+    }, 550);
+  }, 2400);
 
   document.getElementById('logout-btn').addEventListener('click', () => location.reload());
 
